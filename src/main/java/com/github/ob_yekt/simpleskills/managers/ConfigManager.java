@@ -32,6 +32,7 @@ public class ConfigManager {
     private static final Map<String, SkillRequirement> ARMOR_REQUIREMENTS = new HashMap<>();
     private static final Map<String, SkillRequirement> WEAPON_REQUIREMENTS = new HashMap<>();
     private static final Map<String, SkillRequirement> ENCHANTMENT_REQUIREMENTS = new HashMap<>();
+
     public static final Map<String, PrayerSacrifice> PRAYER_SACRIFICES = new HashMap<>();
     private static final Map<String, Integer> COOKING_XP_MAP = new HashMap<>();
     private static final Map<String, Float> COOKING_MULTIPLIER_MAP = new HashMap<>();
@@ -43,6 +44,8 @@ public class ConfigManager {
     private static final Map<String, Float> ALCHEMY_MULTIPLIER_MAP = new HashMap<>();
     private static final Map<String, Integer> AGILITY_XP_MAP = new HashMap<>();
     private static final Map<String, Float> SMITHING_XP_MAP = new HashMap<>();
+	private static final Map<String, Integer> FARMING_ACTION_XP_MAP = new HashMap<>();
+	private static final Map<String, Integer> FARMING_BLOCK_XP_MAP = new HashMap<>();
     private static final Map<String, Float> SMITHING_MULTIPLIER_MAP = new HashMap<>();
     private static final Map<String, Integer> FISHING_XP_MAP = new HashMap<>();
     private static final Map<String, Identifier> FISHING_LOOT_TABLES = new HashMap<>();
@@ -76,6 +79,7 @@ public class ConfigManager {
             loadSmithingMultiplierConfig();
             loadFishingXPConfig();
             loadFishingLootConfig();
+			loadFarmingXPConfig();
             loadCombatConfig();
             Simpleskills.LOGGER.info("All configurations initialized successfully.");
         } catch (IOException e) {
@@ -370,9 +374,9 @@ public class ConfigManager {
 
     private static JsonObject getDefaultCombatConfig() {
         JsonObject json = new JsonObject();
-        json.addProperty("slaying_xp_per_damage", 25.0f);
-        json.addProperty("ranged_xp_per_damage", 25.0f);
-        json.addProperty("defense_xp_per_damage", 100.0f);
+        json.addProperty("slaying_xp_per_damage", 100.0f);
+        json.addProperty("ranged_xp_per_damage", 250.0f);
+        json.addProperty("defense_xp_per_damage", 400.0f);
         json.addProperty("slaying_min_damage_threshold", 2.0f);
         json.addProperty("ranged_min_damage_threshold", 2.0f);
         json.addProperty("defense_min_damage_threshold", 2.0f);
@@ -497,8 +501,6 @@ public class ConfigManager {
         }
     }
 
-
-
     /**
      * Default cooking XP configuration.
      */
@@ -508,25 +510,24 @@ public class ConfigManager {
         record CookingMapping(String item, int xp) {
         }
         CookingMapping[] defaults = {
-                new CookingMapping("item.minecraft.cooked_porkchop", 180),
-                new CookingMapping("item.minecraft.cooked_beef", 180),
-                new CookingMapping("item.minecraft.cooked_mutton", 180),
-                new CookingMapping("item.minecraft.cooked_chicken", 225),     // Boosted to compete with baseline meats
-                new CookingMapping("item.minecraft.cooked_salmon", 150),     // Higher to reward fishing effort
-                new CookingMapping("item.minecraft.cooked_cod", 150),        // Same as salmon
+                new CookingMapping("item.minecraft.cooked_porkchop", 185),
+                new CookingMapping("item.minecraft.cooked_beef", 185),
+                new CookingMapping("item.minecraft.cooked_mutton", 185),
+                new CookingMapping("item.minecraft.cooked_chicken", 185),     // Nerfed to compete with baseline meats
+                new CookingMapping("item.minecraft.cooked_salmon", 200),     // Higher than meats to reward fishing effort
+                new CookingMapping("item.minecraft.cooked_cod", 190),        // Same as salmon
                 new CookingMapping("item.minecraft.cooked_rabbit", 285),     // Increased for rarity and biome specificity
 
-                new CookingMapping("item.minecraft.baked_potato", 130),      // Commonly eaten, easy to get
+                new CookingMapping("item.minecraft.baked_potato", 150),      // Commonly eaten, easy to get
                 new CookingMapping("item.minecraft.golden_carrot", 230),     // Slightly higher for gold and carrot effort
-                new CookingMapping("item.minecraft.golden_apple", 450),     // Increased for rare apples and gold ingots
+                new CookingMapping("item.minecraft.golden_apple", 800),     // Increased for rare apples and gold ingots
 
-                new CookingMapping("item.minecraft.bread", 130),             // Commonly eaten, easy to get
-                new CookingMapping("item.minecraft.cookie", 40),             // Per-cookie, total 320 for 8, for cocoa rarity
-                new CookingMapping("item.minecraft.cake", 750),             // Higher for complex ingredients
-                new CookingMapping("item.minecraft.pumpkin_pie", 350),       // Never made/eaten
-                new CookingMapping("item.minecraft.mushroom_stew", 285),     // Boosted for biome-specific mushrooms
-                new CookingMapping("item.minecraft.beetroot_soup", 285),     // Never made/eaten
-                new CookingMapping("item.minecraft.rabbit_stew", 350)        // Never made/eaten
+                new CookingMapping("item.minecraft.bread", 210),             // Commonly eaten, but need 3 wheat
+                new CookingMapping("item.minecraft.cookie", 35),             // Per-cookie, total 280 for 8, for cocoa rarity is just same recipe with bread but one coco and one wheat less
+                new CookingMapping("item.minecraft.pumpkin_pie", 400),       // Buffed for complexity and for needing 3 ingredients
+                new CookingMapping("item.minecraft.mushroom_stew", 300),     // Boosted for biome-specific mushrooms
+                new CookingMapping("item.minecraft.beetroot_soup", 300),     // Never made/eaten
+                new CookingMapping("item.minecraft.rabbit_stew", 750)        // Never made/eaten
         };
         for (CookingMapping mapping : defaults) {
             JsonObject entry = new JsonObject();
@@ -956,6 +957,9 @@ public class ConfigManager {
             if (stone.contains("sandstone")) {
                 xp = 30; // override sandstone family
             }
+            if (stone.contains("deepslate")) {
+                xp = 200; // override deepslate family
+            }
 
             defaults.add(new BlockMapping("block.minecraft." + stone, "MINING", xp));
 
@@ -975,7 +979,7 @@ public class ConfigManager {
             }
         }
 
-        defaults.add(new BlockMapping("block.minecraft.netherrack", "MINING", 10));
+        defaults.add(new BlockMapping("block.minecraft.netherrack", "MINING", 30));
 
         // Mining: Overworld and Deepslate Ores (keeping original values)
         defaults.add(new BlockMapping("block.minecraft.coal_ore", "MINING", 250));           // 100 * 2.5
@@ -1003,17 +1007,17 @@ public class ConfigManager {
 
         // Excavation: Dirt-type blocks
         defaults.add(new BlockMapping("block.minecraft.dirt", "EXCAVATING", 50));
-        defaults.add(new BlockMapping("block.minecraft.grass_block", "EXCAVATING", 50));
+        defaults.add(new BlockMapping("block.minecraft.grass_block", "EXCAVATING", 55));
         defaults.add(new BlockMapping("block.minecraft.podzol", "EXCAVATING", 50));
         defaults.add(new BlockMapping("block.minecraft.coarse_dirt", "EXCAVATING", 50));
         defaults.add(new BlockMapping("block.minecraft.rooted_dirt", "EXCAVATING", 50));
-        defaults.add(new BlockMapping("block.minecraft.mycelium", "EXCAVATING", 50));
-        defaults.add(new BlockMapping("block.minecraft.farmland", "EXCAVATING", 50));
-        defaults.add(new BlockMapping("block.minecraft.dirt_path", "EXCAVATING", 50));
+        defaults.add(new BlockMapping("block.minecraft.mycelium", "EXCAVATING", 55));
+        defaults.add(new BlockMapping("block.minecraft.farmland", "EXCAVATING", 55));
+        defaults.add(new BlockMapping("block.minecraft.dirt_path", "EXCAVATING", 55));
         defaults.add(new BlockMapping("block.minecraft.mud", "EXCAVATING", 50));
         defaults.add(new BlockMapping("block.minecraft.clay", "EXCAVATING", 50));
         defaults.add(new BlockMapping("block.minecraft.sand", "EXCAVATING", 50));
-        defaults.add(new BlockMapping("block.minecraft.gravel", "EXCAVATING", 50));
+        defaults.add(new BlockMapping("block.minecraft.gravel", "EXCAVATING", 55));
         defaults.add(new BlockMapping("block.minecraft.red_sand", "EXCAVATING", 50));
 
         // Concrete powder blocks
@@ -1023,19 +1027,6 @@ public class ConfigManager {
         for (String color : colors) {
             defaults.add(new BlockMapping("block.minecraft." + color + "_concrete_powder", "EXCAVATING", 50));
         }
-
-        // === FARMING MAPPINGS ===
-
-        // Farming: Crops
-        defaults.add(new BlockMapping("block.minecraft.wheat", "FARMING", 300));
-        defaults.add(new BlockMapping("block.minecraft.carrots", "FARMING", 300));
-        defaults.add(new BlockMapping("block.minecraft.potatoes", "FARMING", 300));
-        defaults.add(new BlockMapping("block.minecraft.beetroots", "FARMING", 250));
-        defaults.add(new BlockMapping("block.minecraft.melon", "FARMING", 300));
-        defaults.add(new BlockMapping("block.minecraft.bamboo", "FARMING", 10));
-        defaults.add(new BlockMapping("block.minecraft.kelp", "FARMING", 10));
-        defaults.add(new BlockMapping("block.minecraft.nether_wart", "FARMING", 350));
-        defaults.add(new BlockMapping("block.minecraft.cocoa", "FARMING", 250));
 
         // Convert to JSON
         for (BlockMapping mapping : defaults) {
@@ -1091,29 +1082,29 @@ public class ConfigManager {
         JsonArray mappings = new JsonArray();
         record SmithingMapping(String action, float xp) {}
         SmithingMapping[] defaults = {
-                new SmithingMapping("repair:minecraft:oak_planks", 100f),
-                new SmithingMapping("repair:minecraft:spruce_planks", 100f),
-                new SmithingMapping("repair:minecraft:birch_planks", 100f),
-                new SmithingMapping("repair:minecraft:jungle_planks", 100f),
-                new SmithingMapping("repair:minecraft:acacia_planks", 100f),
-                new SmithingMapping("repair:minecraft:dark_oak_planks", 100f),
-                new SmithingMapping("repair:minecraft:mangrove_planks", 100f),
-                new SmithingMapping("repair:minecraft:cherry_planks", 100f),
-                new SmithingMapping("repair:minecraft:bamboo_planks", 100f),
-                new SmithingMapping("repair:minecraft:crimson_planks", 100f),
-                new SmithingMapping("repair:minecraft:warped_planks", 100f),
-                new SmithingMapping("repair:minecraft:pale_oak_planks", 100f),
-                new SmithingMapping("repair:minecraft:cobblestone", 100f),
-                new SmithingMapping("repair:minecraft:cobbled_deepslate", 100f),
-                new SmithingMapping("repair:minecraft:blackstone", 100f),
-                new SmithingMapping("repair:minecraft:leather", 100f),
-                new SmithingMapping("repair:minecraft:copper_ingot", 100f),
-                new SmithingMapping("repair:minecraft:gold_ingot", 100f),
-                new SmithingMapping("repair:minecraft:turtle_scute", 100f),
-                new SmithingMapping("repair:minecraft:iron_ingot", 100f),
-                new SmithingMapping("repair:minecraft:phantom_membrane", 100f),
-                new SmithingMapping("repair:minecraft:diamond", 100f),
-                new SmithingMapping("repair:minecraft:netherite_ingot", 100f)
+                new SmithingMapping("repair:minecraft:oak_planks", 50f),
+                new SmithingMapping("repair:minecraft:spruce_planks", 50f),
+                new SmithingMapping("repair:minecraft:birch_planks", 50f),
+                new SmithingMapping("repair:minecraft:jungle_planks", 50f),
+                new SmithingMapping("repair:minecraft:acacia_planks", 50f),
+                new SmithingMapping("repair:minecraft:dark_oak_planks", 50f),
+                new SmithingMapping("repair:minecraft:mangrove_planks", 50f),
+                new SmithingMapping("repair:minecraft:cherry_planks", 50f),
+                new SmithingMapping("repair:minecraft:bamboo_planks", 50f),
+                new SmithingMapping("repair:minecraft:crimson_planks", 50f),
+                new SmithingMapping("repair:minecraft:warped_planks", 50f),
+                new SmithingMapping("repair:minecraft:pale_oak_planks", 50f),
+                new SmithingMapping("repair:minecraft:cobblestone", 50f),
+                new SmithingMapping("repair:minecraft:cobbled_deepslate", 50f),
+                new SmithingMapping("repair:minecraft:blackstone", 50f),
+                new SmithingMapping("repair:minecraft:leather", 50f),
+                new SmithingMapping("repair:minecraft:copper_ingot", 50f),
+                new SmithingMapping("repair:minecraft:gold_ingot", 50f),
+                new SmithingMapping("repair:minecraft:turtle_scute", 50f),
+                new SmithingMapping("repair:minecraft:iron_ingot", 50f),
+                new SmithingMapping("repair:minecraft:phantom_membrane", 50f),
+                new SmithingMapping("repair:minecraft:diamond", 50f),
+                new SmithingMapping("repair:minecraft:netherite_ingot", 50f)
         };
         for (SmithingMapping mapping : defaults) {
             JsonObject entry = new JsonObject();
@@ -1602,11 +1593,11 @@ public class ConfigManager {
                 new WeaponRequirement("minecraft:netherite_axe", "SLAYING", 99),
 
                 // Unique / Misc Weapons
-                new WeaponRequirement("minecraft:mace", "SLAYING", 80),
+                new WeaponRequirement("minecraft:mace", "SLAYING", 50),
 
                 // Ranged Weapons (grouped separately)
                 new WeaponRequirement("minecraft:crossbow", "RANGED", 0),
-                new WeaponRequirement("minecraft:bow", "RANGED", 50),
+                new WeaponRequirement("minecraft:bow", "RANGED", 30),
                 new WeaponRequirement("minecraft:trident", "RANGED", 99)
         };
 
@@ -1660,7 +1651,7 @@ public class ConfigManager {
 
     private static JsonObject getDefaultFishingXPConfig() {
         JsonObject json = new JsonObject();
-        json.addProperty("catch", 750);
+        json.addProperty("catch", 1250);
         return json;
     }
 
@@ -1683,6 +1674,82 @@ public class ConfigManager {
         }
     }
 
+	/**
+	 * Loads farming XP mappings from farming_xp.json.
+	 */
+	private static void loadFarmingXPConfig() {
+		Path filePath = CONFIG_DIR.resolve("farming_xp.json");
+		try {
+			JsonObject json = loadJsonFile(filePath, getDefaultFarmingXPConfig());
+			FARMING_ACTION_XP_MAP.clear();
+			FARMING_BLOCK_XP_MAP.clear();
+			if (json.has("actions") && json.get("actions").isJsonObject()) {
+				JsonObject actions = json.getAsJsonObject("actions");
+				for (Map.Entry<String, JsonElement> entry : actions.entrySet()) {
+					int xp = entry.getValue().getAsInt();
+					if (xp >= 0) {
+						FARMING_ACTION_XP_MAP.put(entry.getKey(), xp);
+					}
+				}
+			}
+			if (json.has("blocks") && json.get("blocks").isJsonArray()) {
+				for (JsonElement element : json.getAsJsonArray("blocks")) {
+					JsonObject mapping = element.getAsJsonObject();
+					String block = mapping.get("block").getAsString();
+					int xp = mapping.get("xp").getAsInt();
+					if (xp >= 0) {
+						FARMING_BLOCK_XP_MAP.put(block, xp);
+					}
+				}
+			}
+			Simpleskills.LOGGER.info("Loaded farming_xp.json");
+		} catch (JsonSyntaxException e) {
+			Simpleskills.LOGGER.error("JSON syntax error in farming_xp.json: {}", e.getMessage());
+		} catch (IOException e) {
+			Simpleskills.LOGGER.error("Error loading farming_xp.json: {}", e.getMessage());
+		}
+	}
+
+	/**
+	 * Default farming XP configuration.
+	 */
+	private static JsonObject getDefaultFarmingXPConfig() {
+		JsonObject json = new JsonObject();
+		JsonObject actions = new JsonObject();
+		actions.addProperty("animal_feed_breed", 250);
+		actions.addProperty("animal_feed_grow", 25);
+		actions.addProperty("shear_sheep", 150);
+		json.add("actions", actions);
+
+		JsonArray blocks = new JsonArray();
+		record FarmingBlock(String block, int xp) {}
+		FarmingBlock[] defaults = new FarmingBlock[] {
+			new FarmingBlock("block.minecraft.wheat", 275),
+			new FarmingBlock("block.minecraft.carrots", 275),
+			new FarmingBlock("block.minecraft.potatoes", 300),
+			new FarmingBlock("block.minecraft.beetroots", 250),
+			new FarmingBlock("block.minecraft.melon", 100),
+			new FarmingBlock("block.minecraft.nether_wart", 350),
+			new FarmingBlock("block.minecraft.cocoa", 250)
+		};
+		for (FarmingBlock fb : defaults) {
+			JsonObject entry = new JsonObject();
+			entry.addProperty("block", fb.block());
+			entry.addProperty("xp", fb.xp());
+			blocks.add(entry);
+		}
+		json.add("blocks", blocks);
+		return json;
+	}
+
+	public static int getFarmingActionXP(String actionKey, Skills skill) {
+		return FARMING_ACTION_XP_MAP.getOrDefault(actionKey, getBaseXP(skill));
+	}
+
+	public static int getFarmingBlockXP(String blockTranslationKey) {
+		return FARMING_BLOCK_XP_MAP.getOrDefault(blockTranslationKey, 0);
+	}
+
     private static JsonObject getDefaultFishingLootConfig() {
         JsonObject json = new JsonObject();
         json.addProperty("1-24", "simpleskills:fishing/simpleskills_fishing_novice");
@@ -1702,7 +1769,8 @@ public class ConfigManager {
         }
         EnchantmentRequirement[] defaults = {
                 new EnchantmentRequirement("minecraft:fortune", "ENCHANTING", 25, 3),
-                new EnchantmentRequirement("minecraft:protection", "ENCHANTING", 50, 4),
+                new EnchantmentRequirement("minecraft:sharpness", "ENCHANTING", 50, 5),
+                new EnchantmentRequirement("minecraft:power", "ENCHANTING", 50, 5),
                 new EnchantmentRequirement("minecraft:efficiency", "ENCHANTING", 75, 5),
                 new EnchantmentRequirement("minecraft:mending", "ENCHANTING", 99, 1)
         };
@@ -1773,26 +1841,26 @@ public class ConfigManager {
                                      String name, int effectLevel, boolean isAmbient) {
         }
         PrayerSacrificeConfig[] defaults = new PrayerSacrificeConfig[]{
-                // Tier 1: 2h (7200s = 144000 ticks), novice buffs
-                new PrayerSacrificeConfig("minecraft:rabbit_foot", "PRAYER", 4000, 0, "minecraft:luck", 144000, "Prayer I: Luck", 1, true),
-                new PrayerSacrificeConfig("minecraft:blue_orchid", "PRAYER", 1000, 0, "minecraft:absorption", 144000, "Prayer I: Absorption", 3, true),
-                new PrayerSacrificeConfig("minecraft:glow_ink_sac", "PRAYER", 1000, 0, "minecraft:dolphins_grace", 144000, "Prayer I: Dolphin's Grace", 1, true),
-                // Tier 2: 4h (14400s = 288000 ticks), journeyman buffs
-                new PrayerSacrificeConfig("minecraft:heart_of_the_sea", "PRAYER", 6000, 25, "minecraft:conduit_power", 288000, "Prayer II: Conduit Power", 1, true),
-                new PrayerSacrificeConfig("minecraft:golden_apple", "PRAYER", 6000, 25, "minecraft:health_boost", 288000, "Prayer II: Health Boost", 1, true),
-                new PrayerSacrificeConfig("minecraft:nautilus_shell", "PRAYER", 5000, 25, "minecraft:water_breathing", 288000, "Prayer II: Water Breathing", 1, true),
-                // Tier 3: 6h (21600s = 432000 ticks), expert buffs
-                new PrayerSacrificeConfig("minecraft:phantom_membrane", "PRAYER", 7000, 50, "minecraft:slow_falling", 432000, "Prayer III: Slow Falling", 1, true),
-                new PrayerSacrificeConfig("minecraft:diamond", "PRAYER", 6500, 50, "minecraft:speed", 432000, "Prayer II: Speed", 2, true),
-                new PrayerSacrificeConfig("minecraft:goat_horn", "PRAYER", 8000, 50, "minecraft:jump_boost", 432000, "Prayer III: Jump Boost", 2, true),
-                // Tier 4: 8h (28800s = 576000 ticks), artisan buffs
-                new PrayerSacrificeConfig("minecraft:pitcher_plant", "PRAYER", 9500, 75, "minecraft:strength", 576000, "Prayer IV: Strength", 2, true),
-                new PrayerSacrificeConfig("minecraft:enchanted_golden_apple", "PRAYER", 9500, 75, "minecraft:resistance", 576000, "Prayer IV: Resistance", 2, true),
-                new PrayerSacrificeConfig("minecraft:wither_skeleton_skull", "PRAYER", 9500, 75, "minecraft:fire_resistance", 576000, "Prayer IV: Fire Resistance", 1, true),
-                // Tier 5: 12h (43200 = 864000 ticks), grandmaster buffs
-                new PrayerSacrificeConfig("minecraft:torchflower", "PRAYER", 10000, 99, "minecraft:night_vision", 864000, "Prayer V: Night Vision", 1, true),
-                new PrayerSacrificeConfig("minecraft:totem_of_undying", "PRAYER", 10000, 99, "minecraft:invisibility", 864000, "Prayer V: Invisibility", 1, true),
-                new PrayerSacrificeConfig("minecraft:nether_star", "PRAYER", 10000, 99, "minecraft:haste", 864000, "Prayer V: Haste 2", 2, true)
+                // Tier 1: 1h (72,000 ticks), novice buffs
+                new PrayerSacrificeConfig("minecraft:rabbit_foot", "PRAYER", 15000, 0, "minecraft:luck", 72000, "Prayer I: Luck", 1, true),
+                new PrayerSacrificeConfig("minecraft:spore_blossom", "PRAYER", 30000, 0, "minecraft:absorption", 72000, "Prayer I: Absorption", 3, true),
+                new PrayerSacrificeConfig("minecraft:glow_ink_sac", "PRAYER", 12000, 0, "minecraft:dolphins_grace", 72000, "Prayer I: Dolphin's Grace", 1, true),
+                // Tier 2: 2h (144000 ticks), journeyman buffs
+                new PrayerSacrificeConfig("minecraft:phantom_membrane", "PRAYER", 18000, 25, "minecraft:slow_falling", 216000, "Prayer III: Slow Falling", 1, true),
+                new PrayerSacrificeConfig("minecraft:golden_apple", "PRAYER", 22000, 25, "minecraft:health_boost", 144000, "Prayer II: Health Boost", 1, true),
+                new PrayerSacrificeConfig("minecraft:nautilus_shell", "PRAYER", 9000, 25, "minecraft:water_breathing", 144000, "Prayer II: Water Breathing", 1, true),
+                // Tier 3: 3h (216000 ticks), expert buffs
+                new PrayerSacrificeConfig("minecraft:heart_of_the_sea", "PRAYER", 30000, 50, "minecraft:conduit_power", 144000, "Prayer II: Conduit Power", 1, true),
+                new PrayerSacrificeConfig("minecraft:diamond", "PRAYER", 25000, 50, "minecraft:speed", 216000, "Prayer II: Speed II", 2, true),
+                new PrayerSacrificeConfig("minecraft:goat_horn", "PRAYER", 45000, 50, "minecraft:jump_boost", 216000, "Prayer III: Jump Boost II", 2, true),
+                // Tier 4: 4h (288000 ticks), artisan buffs
+                new PrayerSacrificeConfig("minecraft:pitcher_plant", "PRAYER", 40000, 75, "minecraft:strength", 288000, "Prayer IV: Strength II", 2, true),
+                new PrayerSacrificeConfig("minecraft:enchanted_golden_apple", "PRAYER", 85000, 75, "minecraft:hero_of_the_village", 288000, "Prayer IV: Hero of the Village", 1, true),
+                new PrayerSacrificeConfig("minecraft:wither_skeleton_skull", "PRAYER", 75000, 75, "minecraft:fire_resistance", 288000, "Prayer IV: Fire Resistance", 1, true),
+                // Tier 5: 8h (57,6000 ticks), grandmaster buffs
+                new PrayerSacrificeConfig("minecraft:torchflower", "PRAYER", 60000, 99, "minecraft:night_vision", 576000, "Prayer V: Night Vision", 1, true),
+                new PrayerSacrificeConfig("minecraft:totem_of_undying", "PRAYER", 95000, 99, "minecraft:invisibility", 576000, "Prayer V: Invisibility", 1, true),
+                new PrayerSacrificeConfig("minecraft:nether_star", "PRAYER", 170000, 99, "minecraft:haste", 576000, "Prayer V: Haste II", 2, true)
         };
         for (PrayerSacrificeConfig config : defaults) {
             JsonObject entry = new JsonObject();

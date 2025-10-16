@@ -35,12 +35,12 @@ Perfect for casual SMPs, lets-players, hardcore survival servers, streamers, or 
 1. **Mining**: Break stone and ores to level up and unlock better tools.
 2. **Woodcutting**: Chop trees to become a lumberjack legend.
 3. **Excavating**: Shovel dirt, sand, and gravel to dig your way to greatness.
-4. **Farming**: Till soil, compost, and harvest crops to feed your empire.
+4. **Farming**: Till soil, compost, shear/feed/breed animals, and harvest crops to feed your empire.
 5. **Fishing**: Reel in fish, treasures, and XP with faster and increasingly better catches as you level.
 6. **Defense**: Take hits in armor to equip improved gear.
 7. **Slaying**: Slay mobs with melee weapons to become a feared warrior.
 8. **Ranged**: Master bows, crossbows, and tridents.
-9. **Enchanting**: Enhance your gear with level-locked enchantments like Mending.
+9. **Enchanting**: Enhance your gear with anvil level-locked enchantments like Mending.
 10. **Alchemy**: Brew potions with boosted durations as you rise through tiers.
 11. **Smithing**: Repair and upgrade gear with unmatched efficiency.
 12. **Cooking**: Cook meals that restore more hunger and saturation.
@@ -77,6 +77,14 @@ Perfect for players who crave a brutal, rewarding challenge or want to stand out
 
 ---
 
+## Quick Customization
+
+1. Too slow? Too fast? Adjust `standard_xp_multiplier` and `ironman_xp_multiplier` in **config.json**!
+
+2. Reload config changes with `/simpleskills reload` (no restart necessary)
+
+---
+
 ## 🔓 Gear Progression: Earn Your Power
 
 Unlock tools and armor as you level up, with **fully customizable** unlock tiers:
@@ -103,24 +111,18 @@ Unlock tools and armor as you level up, with **fully customizable** unlock tiers
 | Diamond       | 75             |  
 | Netherite     | 99             |  
 
-| Weapon | Required Level |  
-|----------------|----------------|  
-| Mace           | 80             |  
-| Crossbow       | 0              |  
-| Bow            | 50             |  
-| Trident        | 99             |  
+### NOTE!: _simpleskills_ allows the Copper Pickaxe to mine the same ores as an [Iron Pickaxe](https://minecraft.wiki/w/Tiers#Mining_level).
+
+| Weapon   | Required Level |  
+|----------|----------------|  
+| Mace     | 50             |  
+| Crossbow | 0              |  
+| Bow      | 30             |  
+| Trident  | 99             |  
 
 **Elytra requires level 50 Prayer by default.**
 
 Affected items comes with **lore text** (e.g., *“Requires level 50 Defense”*), keeping things intuitive for players.
-
----
-
-## Quick Customizaton
-
-1. Too slow? Too fast? Adjust `standard_xp_multiplier` and `ironman_xp_multiplier` in **config.json**!
-
-3. Reload config changes with /simpleskills reload (no restart necessary)
 
 ---
 
@@ -130,15 +132,17 @@ Here’s a taste of what each skill offers:
 
 ### Fishing
 - **Faster Catches**: +0.5% speed per level (up to +49.5% at 99).
-- **Custom Loot Tables**: Unlock better treasures as you level:
+- **Fully Reworked Loot Tables**: Unlock better treasures as you level:
 
-| Tier            | Fish | Junk | Treasure                     |  
-|-----------------|------|------|-----------------------------|  
-| Novice (1–24)   | 80%  | 20%  | None                        |  
-| Journeyman (25–49) | 80%  | 15%  | 5% (Bows, Rods, Saddles)   |  
-| Artisan (50–74) | 80%  | 13%  | 7% (Enchanted Gear)         |  
-| Expert (75–98)  | 85%  | 5%   | 10% (Books, Tridents)       |  
-| Grandmaster (99)| 79%  | 1%   | 15% (Rare Enchanted Items)  |
+| Tier               | Fish | Junk | Treasure |  
+|--------------------|------|------|----------|  
+| Novice (1–24)      | 70%  | 25%  | 5%       |  
+| Journeyman (25–49) | 70%  | 22%  | 8%       |  
+| Artisan (50–74)    | 70%  | 19%  | 11%      |  
+| Expert (75–98)     | 70%  | 16%  | 14%      |  
+| Grandmaster (99)   | 70%  | 10%  | 20%      |
+
+Each tier has a handmade loot table that ensures a balanced and exciting fishing experience.
 
 ### NOTICE!
 **If you use a fishing mod that changes loot tables, set "custom_fishing_loot_enabled" to false in config.json and restart the server.**
@@ -146,9 +150,10 @@ Here’s a taste of what each skill offers:
 ---
 
 ### Enchanting
-Lock powerful enchantments to specific levels, defaulted to:
+Lock powerful enchantments from being used at an anvil to specific levels, defaulted to:
 - Fortune III: Level 25
-- Protection IV: Level 50
+- Sharpness V: Level 50
+- Power V: Level 50
 - Efficiency V: Level 75
 - Mending: Level 99
 
@@ -170,23 +175,22 @@ The customizable Cooking XP table is also designed to encourage other food types
 
 | Item                | XP  |
 |---------------------|-----|
-| Cooked Porkchop     | 180 |
-| Cooked Beef         | 180 |
-| Cooked Mutton       | 180 |
-| Cooked Chicken      | 225 |
-| Cooked Salmon       | 150 |
-| Cooked Cod          | 150 |
+| Cooked Porkchop     | 185 |
+| Cooked Beef         | 185 |
+| Cooked Mutton       | 185 |
+| Cooked Chicken      | 185 |
+| Cooked Salmon       | 200 |
+| Cooked Cod          | 190 |
 | Cooked Rabbit       | 285 |
-| Baked Potato        | 130 |
+| Baked Potato        | 150 |
 | Golden Carrot       | 230 |
-| Golden Apple        | 450 |
-| Bread               | 130 |
-| Cookie              | 40  |
-| Cake                | 750 |
-| Pumpkin Pie         | 350 |
-| Mushroom Stew       | 285 |
-| Beetroot Soup       | 285 |
-| Rabbit Stew         | 350 |
+| Golden Apple        | 800 |
+| Bread               | 210 |
+| Cookie              | 35  |
+| Pumpkin Pie         | 400 |
+| Mushroom Stew       | 300 |
+| Beetroot Soup       | 300 |
+| Rabbit Stew         | 750 |
 
 ---
 
@@ -197,6 +201,30 @@ Brew potions with boosted durations, defaulted to:
 - Artisan (50–74): 1.50x duration
 - Expert (75–98): 1.75x duration
 - Grandmaster (99): 3x duration
+
+---
+
+## Farming
+
+* Gain XP from breeding and feeding animals, shearing sheep, and harvesting crops. Gain bonus drops on mature crops based on your Farming level (1% chance per level, up to 99%).
+* Farming unlocks the ability to use higher tiers of Hoe tools.
+* Players also gain 1% per level of farming to grant an **extra drop** when harvesting crops, to a max of 99% at level 99.
+
+**Animals:**
+- Breeding animals: **250 XP**
+- Feeding baby animals: **25 XP** (per food item)
+- Shearing sheep: **150 XP**
+
+**Crops** (when fully mature):
+- Wheat: **275 XP**
+- Carrots: **275 XP**
+- Potatoes: **300 XP**
+- Beetroots: **250 XP**
+- Melons: **100 XP**
+- Nether Wart: **350 XP**
+- Cocoa: **250 XP**
+
+You can customize these XP values in `farming_xp.json`.
 
 ---
 
@@ -217,6 +245,13 @@ Tools and armor are repaired at higher rates. All upgraded Netherite items are s
 
 Anvils no longer takes damage from repairing.
 
+Players repair a percentage of item durability based on their Smithing level:
+- Novice (1–24): 25%
+- Journeyman (25–49): 35%
+- Artisan (50–74): 45%
+- Expert (75–98): 55%
+- Grandmaster (99): 100%
+
 The Smithing bonus stacks with the Crafting bonus: a Grandmaster Crafted Pickaxe upgraded by a Grandmaster Smith will have the highest durability.
 - Novice (1–24): 0% durability bonus for gear diamond upgraded to Netherite
 - Journeyman (25–49): 5% durability bonus for diamond gear upgraded to Netherite
@@ -227,29 +262,36 @@ The Smithing bonus stacks with the Crafting bonus: a Grandmaster Crafted Pickaxe
 ---
 
 ### Prayer
-Sacrifice rare items for powerful buffs:
-
-| Item                        | Level | Effect                  | Duration | Name                          | Effect Level |
-|-----------------------------|-------|-------------------------|----------|-------------------------------|--------------|
-| 🐇 Rabbit Foot              | 0     | minecraft:luck          | 144000   | Prayer I: Luck                | 1            |
-| 💠 Blue Orchid              | 0     | minecraft:absorption     | 144000   | Prayer I: Absorption          | 3            |
-| ✨ Glow Ink Sac             | 0     | minecraft:dolphins_grace | 144000   | Prayer I: Dolphin's Grace     | 1            |
-| 🌊 Heart of the Sea         | 25    | minecraft:conduit_power  | 288000   | Prayer II: Conduit Power      | 1            |
-| 🍏 Golden Apple             | 25    | minecraft:health_boost   | 288000   | Prayer II: Health Boost       | 1            |
-| 🐚 Nautilus Shell           | 25    | minecraft:water_breathing| 288000   | Prayer II: Water Breathing    | 1            |
-| 🦇 Phantom Membrane         | 50    | minecraft:slow_falling   | 432000   | Prayer III: Slow Falling      | 1            |
-| 💎 Diamond                  | 50    | minecraft:speed          | 432000   | Prayer II: Speed              | 2            |
-| 🐐 Goat Horn                | 50    | minecraft:jump_boost     | 432000   | Prayer III: Jump Boost        | 2            |
-| 🌿 Pitcher Plant            | 75    | minecraft:strength       | 576000   | Prayer IV: Strength           | 2            |
-| 🍎 Enchanted Golden Apple   | 75    | minecraft:resistance     | 576000   | Prayer IV: Resistance         | 2            |
-| ☠️ Wither Skeleton Skull    | 75    | minecraft:fire_resistance| 576000   | Prayer IV: Fire Resistance    | 1            |
-| 🏵️ Torchflower             | 99    | minecraft:night_vision   | 864000   | Prayer V: Night Vision        | 1            |
-| 🏆 Totem of Undying         | 99    | minecraft:invisibility    | 864000   | Prayer V: Invisibility        | 1            |
-| ⭐ Nether Star               | 99    | minecraft:haste          | 864000   | Prayer V: Haste 2             | 2            |
-
-Elytra unlocks at level 50 Prayer by default.
+Sacrifice rare items for powerful buffs.
 
 Fully customizable: create your own sacrifices and effects!
+
+| Item                         | Level | XP      | Effect              | Duration | Name                           | Effect Level |
+|------------------------------|-------|---------|---------------------|----------|--------------------------------|--------------|
+| **Tier 1: Novice (1h)**      |       |         |                     |          |                                |              |
+| 🐇 Rabbit Foot               | 0     | 15,000  | Luck                | 1h       | Prayer I: Luck                 | 1            |
+| 🌼 Spore Blossom             | 0     | 30,000  | Absorption          | 1h       | Prayer I: Absorption           | 3            |
+| ✨ Glow Ink Sac               | 0     | 12,000  | Dolphins grace      | 1h       | Prayer I: Dolphin's Grace      | 1            |
+| **Tier 2: Journeyman (2h)**  |       |         |                     |          |                                |              |
+| 🦇 Phantom Membrane          | 25    | 18,000  | Slow falling        | 2h       | Prayer III: Slow Falling       | 1            |
+| 🍎 Golden Apple              | 25    | 22,000  | Health boost        | 2h       | Prayer II: Health Boost        | 1            |
+| 🐚 Nautilus Shell            | 25    | 9,000   | Water breathing     | 2h       | Prayer II: Water Breathing     | 1            |
+| **Tier 3: Expert (3h)**      |       |         |                     |          |                                |              |
+| 🌊 Heart of the Sea          | 50    | 30,000  | Conduit power       | 3h       | Prayer II: Conduit Power       | 1            |
+| 💎 Diamond                   | 50    | 25,000  | Speed               | 3h       | Prayer II: Speed II            | 2            |
+| 🐐 Goat Horn                 | 50    | 45,000  | Jump boost          | 3h       | Prayer III: Jump Boost II      | 2            |
+| **Tier 4: Artisan (4h)**     |       |         |                     |          |                                |              |
+| 🌿 Pitcher Plant             | 75    | 40,000  | Strength            | 4h       | Prayer IV: Strength II         | 2            |
+| 🏆 Enchanted Golden Apple    | 75    | 85,000  | Hero of the Village | 4h       | Prayer IV: Hero of the Village | 1            |
+| ☠️ Wither Skeleton Skull     | 75    | 75,000  | Fire Resistance     | 4h       | Prayer IV: Fire Resistance     | 1            |
+| **Tier 5: Grandmaster (8h)** |       |         |                     |          |                                |              |
+| 🏵️ Torchflower              | 99    | 60,000  | Night Vision        | 8h       | Prayer V: Night Vision         | 1            |
+| 💀 Totem of Undying          | 99    | 95,000  | Invisibility        | 8h       | Prayer V: Invisibility         | 1            |
+| ⭐ Nether Star                | 99    | 170,000 | Haste               | 8h       | Prayer V: Haste II             | 2            |
+
+XP is awarded to the *Prayer* skill on sacrifice. Higher-level sacrifices require the corresponding Prayer level.
+
+### Elytra unlocks at level 50 Prayer by default. Adjustable in `armor_requirements.json`
 
 ---
 

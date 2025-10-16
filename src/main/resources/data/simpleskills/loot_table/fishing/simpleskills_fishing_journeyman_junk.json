@@ -7,7 +7,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:coal",
-          "weight": 12,
+          "weight": 11,
           "functions": [
             {
               "count": {
@@ -22,7 +22,7 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:clay_ball",
-          "weight": 12,
+          "weight": 11,
           "functions": [
             {
               "count": {
@@ -200,12 +200,12 @@
         {
           "type": "minecraft:item",
           "name": "minecraft:string",
-          "weight": 5
+          "weight": 4
         },
         {
           "type": "minecraft:item",
           "name": "minecraft:kelp",
-          "weight": 5,
+          "weight": 4,
           "functions": [
             {
               "count": {
@@ -216,10 +216,30 @@
               "function": "minecraft:set_count"
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_nugget",
+          "weight": 2,
+          "functions": [
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 1.0,
+                "max": 3.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:copper_ingot",
+          "weight": 2
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "simpleskills:fishing/simpleskills_fishing_novice_junk"
+  "random_sequence": "simpleskills:fishing/simpleskills_fishing_journeyman_junk"
 }
